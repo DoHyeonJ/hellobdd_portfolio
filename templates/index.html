@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="헬로비디디 - 서버 직접 통신 기반 무차단 자동화, 메디컬·포털 플랫폼 최적화, AI 여론 분석 솔루션">
+  <meta name="theme-color" content="#ffffff">
+  <title>{{ company }} | 기술 포트폴리오</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v={{ static_v }}">
+</head>
+<body>
+  <header class="header" id="top">
+    <div class="header__inner">
+      <a href="#top" class="logo">헬로<span>비디디</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="메뉴" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="nav" id="nav">
+      <a href="#capabilities">기능</a>
+      <a href="#cases">실적</a>
+      <a href="#kmong">크몽</a>
+      <a href="#contact" class="nav__cta">문의</a>
+    </nav>
+    <div class="nav-backdrop" id="navBackdrop" hidden></div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="intro">
+      <div class="container">
+        <p class="hero__eyebrow reveal">{{ hero_eyebrow }}</p>
+        <h1 class="hero__title reveal">
+          <span class="hero__line hero__line--main">{{ hero_title_main }}</span>
+          <span class="hero__line hero__line--sub">{{ hero_title_sub }}</span>
+        </h1>
+        <p class="hero__platforms reveal">
+          {% for line in hero_platform_lines %}
+          <span class="hero__platforms-line">
+            {%- for platform in line -%}
+            <span>{{ platform }}</span>{% if not loop.last %} · {% endif %}
+            {%- endfor -%}
+          </span>
+          {% endfor %}
+          <span class="hero__platforms-note">{{ hero_platforms_note }}</span>
+        </p>
+        <div class="hero__marquee reveal" aria-label="핵심 기술 키워드">
+          <div class="hero__marquee-track">
+            {% for kw in hero_keywords %}
+            <span class="hero__keyword{% if loop.index0 < 3 %} hero__keyword--accent{% endif %}">{{ kw }}</span>
+            {% endfor %}
+            {% for kw in hero_keywords %}
+            <span class="hero__keyword{% if loop.index0 < 3 %} hero__keyword--accent{% endif %}" aria-hidden="true">{{ kw }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="hero__actions reveal">
+          <a href="#kmong" class="btn btn--dark">검증된 납품 실적</a>
+          <a href="#contact" class="btn btn--outline">문의하기</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUMBERS (Blackkiwi style) -->
+    <section class="numbers" id="numbers">
+      <div class="container">
+        <h2 class="numbers__title">NUMBERS</h2>
+        <div class="numbers__grid">
+          {% for stat in stats_overview %}
+          <div class="numbers__item reveal">
+            <p class="numbers__value">
+              <span
+                {% if stat.unit == '점' %}
+                data-count="{{ stat.value }}"
+                {% else %}
+                data-count="{{ stat.numeric if stat.numeric is not none else '' }}"
+                {% endif %}
+                data-fallback="{{ stat.value }}"
+              >0</span>{{ stat.unit }}
+            </p>
+            <p class="numbers__label">{{ stat.label }}</p>
+            <p class="numbers__sub">{{ stat.desc }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities (Step tabs - Blackkiwi style) -->
+    <section class="capabilities" id="capabilities">
+      <div class="container">
+        <h2 class="section-title reveal">무엇을 할 수 있나요</h2>
+        <p class="section-desc reveal">단계별로 필요한 기술을 확인하세요</p>
+
+        <div class="step-nav reveal" role="tablist">
+          {% for cap in capabilities %}
+          <button
+            class="step-nav__btn{% if loop.first %} is-active{% endif %}"
+            role="tab"
+            data-tab="{{ cap.id }}"
+            aria-selected="{{ 'true' if loop.first else 'false' }}"
+          >{{ cap.num }} {{ cap.tab }}</button>
+          {% endfor %}
+        </div>
+
+        {% for cap in capabilities %}
+        <article class="cap-panel reveal{% if loop.first %} is-active{% endif %}" id="panel-{{ cap.id }}" role="tabpanel">
+          <div class="cap-panel__inner">
+            <div class="cap-panel__content">
+              <span class="cap-panel__badge">{{ cap.num }} {{ cap.tab }}</span>
+              <p class="cap-panel__goal">{{ cap.goal }}</p>
+              <h3 class="cap-panel__headline">{{ cap.headline }}</h3>
+              <p class="cap-panel__desc">{{ cap.desc }}</p>
+              <div class="cap-panel__tags">
+                {% for tag in cap.tags %}
+                <span class="cap-tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="cap-panel__visual" aria-hidden="true">
+              {% if cap.id == 'naver' %}
+              <div class="cap-visual cap-visual--rank">
+                <p class="cap-visual__title">검색 순위 추이</p>
+                <div class="rank-chart">
+                  <div class="rank-chart__item">
+                    <div class="rank-chart__track">
+                      <span class="rank-chart__num">4위</span>
+                      <div class="rank-chart__bar" data-h="40"></div>
+                    </div>
+                    <span class="rank-chart__label">3주 전</span>
+                  </div>
+                  <div class="rank-chart__item">
+                    <div class="rank-chart__track">
+                      <span class="rank-chart__num">3위</span>
+                      <div class="rank-chart__bar" data-h="58"></div>
+                    </div>
+                    <span class="rank-chart__label">2주 전</span>
+                  </div>
+                  <div class="rank-chart__item">
+                    <div class="rank-chart__track">
+                      <span class="rank-chart__num">2위</span>
+                      <div class="rank-chart__bar" data-h="78"></div>
+                    </div>
+                    <span class="rank-chart__label">1주 전</span>
+                  </div>
+                  <div class="rank-chart__item rank-chart__item--lead">
+                    <div class="rank-chart__track">
+                      <span class="rank-chart__num">1위</span>
+                      <div class="rank-chart__bar" data-h="100"></div>
+                    </div>
+                    <span class="rank-chart__label">현재</span>
+                  </div>
+                </div>
+              </div>
+              {% elif cap.id == 'medical' %}
+              <div class="cap-visual cap-visual--gauge">
+                <p class="cap-visual__title">플랫폼 노출 지수</p>
+                <div class="donut-gauge">
+                  <div class="donut-gauge__ring" data-value="94"></div>
+                  <span class="donut-gauge__value"><span data-count="94">0</span>%</span>
+                </div>
+                <div class="gauge-metrics">
+                  <span>노출 <strong data-count="87">0</strong>%</span>
+                  <span>전환 <strong data-count="72">0</strong>%</span>
+                </div>
+              </div>
+              {% elif cap.id == 'ai' %}
+              <div class="cap-visual cap-visual--sentiment">
+                <p class="cap-visual__title">AI 여론 분석</p>
+                <div class="sentiment-bars">
+                  <div class="sentiment-row"><span>긍정</span><div class="sentiment-track"><div class="sentiment-fill sentiment-fill--pos" data-w="72"></div></div><em>72%</em></div>
+                  <div class="sentiment-row"><span>중립</span><div class="sentiment-track"><div class="sentiment-fill sentiment-fill--neu" data-w="20"></div></div><em>20%</em></div>
+                  <div class="sentiment-row"><span>부정</span><div class="sentiment-track"><div class="sentiment-fill sentiment-fill--neg" data-w="8"></div></div><em>8%</em></div>
+                </div>
+                <svg class="spark-line" viewBox="0 0 200 48" preserveAspectRatio="none">
+                  <polyline class="spark-line__path" points="0,38 30,32 60,28 90,18 120,22 150,10 180,14 200,6"/>
+                </svg>
+              </div>
+              {% else %}
+              <div class="cap-visual cap-visual--pipeline">
+                <p class="cap-visual__title">맞춤 자동화 파이프라인</p>
+                <div class="pipeline">
+                  <div class="pipeline__node">수집</div>
+                  <div class="pipeline__line"></div>
+                  <div class="pipeline__node">동기화</div>
+                  <div class="pipeline__line"></div>
+                  <div class="pipeline__node pipeline__node--accent">자동화</div>
+                  <div class="pipeline__line"></div>
+                  <div class="pipeline__node">리포트</div>
+                </div>
+                <div class="pipeline-status">
+                  <span class="pipeline-status__dot"></span>실시간 운영 중
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products" id="cases">
+      <div class="container">
+        <h2 class="section-title reveal">자체 서비스</h2>
+        <p class="section-desc reveal">실제 운영 중인 서비스로 검증된 기술력</p>
+        <div class="products__grid">
+          {% for product in products %}
+          <a href="{{ product.url }}" class="product-card reveal" target="_blank" rel="noopener noreferrer">
+            <span class="pill pill--muted">자체 서비스</span>
+            <h3 class="product-card__name">{{ product.name }}</h3>
+            <p class="product-card__url">{{ product.display_url }}</p>
+            <p class="product-card__desc">{{ product.desc }}</p>
+          </a>
+          {% endfor %}
+        </div>
+
+        <!-- Chart -->
+        <div class="dashboard-card reveal">
+          <div class="dashboard-card__header">
+            <div>
+              <h3 class="dashboard-card__title">자동화 데이터 처리량</h3>
+              <p class="dashboard-card__sub">월별 처리 추이 · 수치 입력 예정</p>
+            </div>
+          </div>
+          <div class="bar-chart">
+            {% for item in trend_data %}
+            <div class="bar-chart__col">
+              <div class="bar-chart__wrap">
+                <div class="bar-chart__bar" data-height="{{ item.height_pct }}" data-value="{{ item.value }}"></div>
+              </div>
+              <span class="bar-chart__label">{{ item.month }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Case feed -->
+        <div class="dashboard-card reveal">
+          <div class="dashboard-card__header">
+            <h3 class="dashboard-card__title">고객사 구축 사례</h3>
+            <span class="live-badge"><span class="live-badge__dot"></span>실시간 대응</span>
+          </div>
+          <ul class="feed-list">
+            {% for case in case_stats %}
+            <li class="feed-item">
+              <span class="feed-item__platform">{{ case.platform }}</span>
+              <div class="feed-item__body">
+                <strong>{{ case.client }}</strong>
+                <span>{{ case.before_label }} → {{ case.after_label }}</span>
+              </div>
+              <div class="feed-item__bars">
+                <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--before" data-width="{{ case.before_pct }}"></div></div>
+                <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--after" data-width="{{ case.after_pct }}"></div></div>
+              </div>
+              <span class="feed-item__val">{{ case.after_text }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kmong -->
+    <section class="kmong-section" id="kmong">
+      <div class="container">
+        <h2 class="section-title reveal">크몽 검증 실적</h2>
+        <p class="section-desc reveal">실제 납품으로 검증된 개발 파트너</p>
+        <article class="kmong-card reveal">
+          <div class="kmong-card__row">
+            <img class="kmong-card__avatar" src="/static/img/kmong-profile.png" alt="HelloBDD" width="48" height="48">
+            <div>
+              <span class="pill pill--green">Lv.{{ kmong.level }}</span>
+              <h3 class="kmong-card__name">{{ kmong.name }}</h3>
+              <p class="kmong-card__rating">★ {{ kmong.rating }} <small>({{ kmong.reviews }}개 리뷰)</small></p>
+            </div>
+            <a href="{{ kmong.url }}" class="btn btn--green" target="_blank" rel="noopener noreferrer">프로필 →</a>
+          </div>
+          <div class="kmong-card__stats">
+            <div class="kmong-stat">
+              <span class="kmong-stat__num" data-count="{{ kmong.tasks }}">0</span>
+              <span class="kmong-stat__lbl">총 작업 수</span>
+            </div>
+            <div class="kmong-stat kmong-stat--highlight">
+              <span class="kmong-stat__num" data-count="{{ kmong.satisfaction }}">0</span><span class="kmong-stat__unit">%</span>
+              <span class="kmong-stat__lbl">만족도</span>
+            </div>
+            <div class="kmong-stat">
+              <span class="kmong-stat__num" data-count="{{ kmong.rating_numeric }}" data-fallback="{{ kmong.rating }}">0</span><span class="kmong-stat__unit">점</span>
+              <span class="kmong-stat__lbl">평균 평점</span>
+            </div>
+          </div>
+          <ul class="kmong-card__meta">
+            <li>평균 응답 {{ kmong.response_time }}</li>
+            <li>연락 {{ kmong.contact_hours }}</li>
+            <li>{{ kmong.location }}</li>
+            <li>{{ kmong.tax_invoice }}</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <div class="contact-hero reveal">
+          <p class="contact-hero__eyebrow">{{ contact_hero.eyebrow }}</p>
+          <h2 class="contact-hero__title">{{ contact_hero.title }}</h2>
+          <p class="contact-hero__desc">{{ contact_hero.desc }}</p>
+          <ul class="contact-hero__points">
+            {% for point in contact_hero.points %}
+            <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="contact-highlights reveal">
+          {% for item in contact_hero.highlights %}
+          <article class="contact-highlight">
+            <h3 class="contact-highlight__title">{{ item.title }}</h3>
+            <p class="contact-highlight__desc">{{ item.desc }}</p>
+          </article>
+          {% endfor %}
+        </div>
+
+        <div class="contact-grid reveal">
+          {% for ch in contact_channels %}
+          <a href="{{ ch.url }}" class="contact-card contact-card--{{ ch.id }}{% if ch.primary %} contact-card--primary{% endif %}"
+             {% if ch.id != 'email' %}target="_blank" rel="noopener noreferrer"{% endif %}>
+            {% if ch.primary %}<span class="contact-card__badge">추천</span>{% endif %}
+            <span class="contact-card__icon" aria-hidden="true">
+              {% if ch.id == 'kakao' %}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 4C7.03 4 3 7.13 3 11c0 2.55 1.66 4.78 4.15 6.05-.18.66-.66 2.4-.75 2.77-.12.47.17.46.36.34.15-.1 2.4-1.62 3.38-2.28.58.08 1.18.12 1.86.12 4.97 0 9-3.13 9-7s-4.03-7-9-7Z" fill="currentColor"/></svg>
+              {% elif ch.id == 'telegram' %}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21.5 4.5 3.8 11.2c-.9.35-.88 1.62.03 1.93l4.55 1.43 1.74 5.38c.28.86 1.42.98 1.88.2l2.55-4.12 4.74 3.48c.74.54 1.78.13 1.98-.74L22.7 6.1c.22-.88-.52-1.68-1.2-1.6Z" fill="currentColor"/></svg>
+              {% else %}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4V6Zm0-2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm2 3 8 5 8-5v1.2l-8 5-8-5V7Z" fill="currentColor"/></svg>
+              {% endif %}
+            </span>
+            <div class="contact-card__body">
+              <span class="contact-card__label">{{ ch.label }}</span>
+              <span class="contact-card__value">{{ ch.value }}</span>
+              <span class="contact-card__hint">{{ ch.hint }}</span>
+            </div>
+            <span class="contact-card__action" aria-hidden="true">→</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>헬로<span>비디디</span> · &copy; 2026 {{ company }}</p>
+    </div>
+  </footer>
+
+  <a href="{{ contact_channels[0].url }}" class="float-cta" target="_blank" rel="noopener noreferrer">문의하기</a>
+
+  <script src="/static/js/main.js?v={{ static_v }}"></script>
+</body>
+</html>
