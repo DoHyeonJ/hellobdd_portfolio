@@ -29,15 +29,6 @@
     });
   }
 
-  /* Step tabs */
-  const capSection = document.getElementById("capabilities");
-  const tabBtns = document.querySelectorAll(".step-nav__btn");
-  const panels = document.querySelectorAll(".cap-panel");
-  let capIndex = 0;
-  let capAutoTimer = null;
-  let capPaused = false;
-  let capSectionVisible = false;
-
   function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
 
   function countUp(el, target, duration, formatter) {
@@ -47,14 +38,17 @@
       return;
     }
     const start = performance.now();
+    let lastText = "";
     function frame(now) {
       const p = Math.min((now - start) / duration, 1);
-      if (p >= 1) {
-        el.textContent = fallback || formatter(target);
-        return;
+      const text = p >= 1
+        ? (fallback || formatter(target))
+        : formatter(target * easeOut(p));
+      if (text !== lastText) {
+        lastText = text;
+        el.textContent = text;
       }
-      el.textContent = formatter(target * easeOut(p));
-      requestAnimationFrame(frame);
+      if (p < 1) requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
   }
@@ -115,144 +109,6 @@
     });
   }
 
-  function resetCapVisual(panel) {
-    if (!panel) return;
-    panel.querySelectorAll(".rank-chart__bar").forEach(function (bar) {
-      bar.style.height = "0";
-    });
-    panel.querySelectorAll(".sentiment-fill").forEach(function (fill) {
-      fill.style.width = "0";
-    });
-    const ring = panel.querySelector(".donut-gauge__ring");
-    if (ring) {
-      ring.style.background = "conic-gradient(var(--gray-200) 0deg, var(--gray-200) 360deg)";
-    }
-    const spark = panel.querySelector(".spark-line__path");
-    if (spark) spark.style.strokeDashoffset = "300";
-  }
-
-  function animateCapVisual(panel) {
-    if (!panel) return;
-
-    panel.querySelectorAll(".rank-chart__bar").forEach(function (bar, i) {
-      const h = bar.dataset.h || "50";
-      bar.style.height = "0";
-      setTimeout(function () { bar.style.height = h + "%"; }, reduced ? 0 : 80 + i * 90);
-    });
-
-    const ring = panel.querySelector(".donut-gauge__ring");
-    if (ring) {
-      const val = parseFloat(ring.dataset.value) || 90;
-      const deg = (val / 100) * 360;
-      if (reduced) {
-        ring.style.background = "conic-gradient(var(--orange) " + deg + "deg, var(--gray-200) " + deg + "deg)";
-      } else {
-        ring.style.background = "conic-gradient(var(--gray-200) 0deg, var(--gray-200) 360deg)";
-        setTimeout(function () {
-          ring.style.background = "conic-gradient(var(--orange) " + deg + "deg, var(--gray-200) " + deg + "deg)";
-        }, 120);
-      }
-    }
-
-    panel.querySelectorAll(".sentiment-fill").forEach(function (fill, i) {
-      const w = fill.dataset.w || "0";
-      fill.style.width = "0";
-      setTimeout(function () { fill.style.width = w + "%"; }, reduced ? 0 : 100 + i * 100);
-    });
-
-    const spark = panel.querySelector(".spark-line__path");
-    if (spark && !reduced) {
-      spark.style.strokeDashoffset = "300";
-      setTimeout(function () { spark.style.strokeDashoffset = "0"; }, 200);
-    }
-  }
-
-  function playCapPanel(panel) {
-    if (!panel) return;
-    resetCounters(panel);
-    resetCapVisual(panel);
-    animateCapVisual(panel);
-    runCounters(panel);
-  }
-
-  function activateCapTab(id) {
-    tabBtns.forEach(function (b) {
-      const active = b.dataset.tab === id;
-      b.classList.toggle("is-active", active);
-      b.setAttribute("aria-selected", active ? "true" : "false");
-      if (active) {
-        b.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
-    });
-    panels.forEach(function (p) {
-      const active = p.id === "panel-" + id;
-      p.classList.toggle("is-active", active);
-      if (active && capSectionVisible) playCapPanel(p);
-    });
-    capIndex = Array.from(tabBtns).findIndex(function (b) { return b.dataset.tab === id; });
-    if (capIndex < 0) capIndex = 0;
-  }
-
-  function stopCapAutoRotate() {
-    if (capAutoTimer) {
-      clearInterval(capAutoTimer);
-      capAutoTimer = null;
-    }
-  }
-
-  function startCapAutoRotate() {
-    if (reduced || capPaused || !capSectionVisible || tabBtns.length <= 1) return;
-    stopCapAutoRotate();
-    capAutoTimer = setInterval(function () {
-      if (capPaused || !capSectionVisible) return;
-      capIndex = (capIndex + 1) % tabBtns.length;
-      activateCapTab(tabBtns[capIndex].dataset.tab);
-    }, 3500);
-  }
-
-  tabBtns.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      activateCapTab(btn.dataset.tab);
-      stopCapAutoRotate();
-      startCapAutoRotate();
-    });
-  });
-
-  if (capSection) {
-    capSection.addEventListener("mouseenter", function () { capPaused = true; });
-    capSection.addEventListener("mouseleave", function () {
-      capPaused = false;
-      startCapAutoRotate();
-    });
-    capSection.addEventListener("focusin", function () { capPaused = true; });
-    capSection.addEventListener("focusout", function (e) {
-      if (!capSection.contains(e.relatedTarget)) {
-        capPaused = false;
-        startCapAutoRotate();
-      }
-    });
-
-    const capObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        const visible = e.isIntersecting && e.intersectionRatio >= animThreshold;
-        if (visible) {
-          if (!capSectionVisible) {
-            capSectionVisible = true;
-            if (!capSection.dataset.animated) {
-              capSection.dataset.animated = "1";
-              playCapPanel(document.querySelector(".cap-panel.is-active"));
-            }
-            startCapAutoRotate();
-          }
-        } else if (capSectionVisible) {
-          capSectionVisible = false;
-          stopCapAutoRotate();
-        }
-      });
-    }, { threshold: [0, 0.15, animThreshold, 0.5], rootMargin: animRootMargin });
-    capObs.observe(capSection);
-  }
-
   function animateDataSection(section) {
     if (!section || section.dataset.animated) return;
     section.dataset.animated = "1";
@@ -270,19 +126,19 @@
     });
   }, { threshold: [0, animThreshold, 0.55], rootMargin: animRootMargin });
 
-  ["numbers", "cases", "kmong"].forEach(function (id) {
+  ["numbers"].forEach(function (id) {
     const sec = document.getElementById(id);
     if (sec) dataSectionObserver.observe(sec);
   });
 
-  /* Scroll reveal — opacity only, no counter trigger */
+  /* Scroll reveal */
   const revealObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (!e.isIntersecting) return;
       e.target.classList.add("is-visible");
       revealObserver.unobserve(e.target);
     });
-  }, { threshold: isMobile ? 0.2 : 0.12, rootMargin: "0px 0px -5% 0px" });
+  }, { threshold: isMobile ? 0.18 : 0.12, rootMargin: "0px 0px -8% 0px" });
 
   document.querySelectorAll(".reveal").forEach(function (el) {
     if (reduced) {
@@ -292,14 +148,179 @@
     }
   });
 
+  /* Motion stages — staggered enter like FlareLane */
+  function indexStageKids(stage) {
+    const kids = stage.querySelectorAll(
+      ":scope > .cap-tile, :scope > .process-col, :scope > .prog-demo, :scope > .scenario, :scope > .kakao-phone, :scope > article"
+    );
+    kids.forEach(function (el, i) {
+      el.style.setProperty("--i", String(i));
+    });
+  }
+
+  document.querySelectorAll(".motion-stage").forEach(indexStageKids);
+
+  function activateStage(stage) {
+    if (!stage || stage.classList.contains("is-on")) return;
+    stage.classList.add("is-on");
+    stage.querySelectorAll(".reveal").forEach(function (el) {
+      el.classList.add("is-visible");
+    });
+  }
+
+  function checkMotionStages() {
+    document.querySelectorAll(".motion-stage:not(.is-on)").forEach(function (stage) {
+      const rect = stage.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9 && rect.bottom > 48) {
+        activateStage(stage);
+      }
+    });
+  }
+
   if (reduced) {
-    ["numbers", "cases", "kmong"].forEach(function (id) {
+    document.querySelectorAll(".motion-stage").forEach(activateStage);
+  } else {
+    const stageObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        activateStage(e.target);
+        stageObserver.unobserve(e.target);
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -4% 0px" });
+
+    document.querySelectorAll(".motion-stage").forEach(function (stage) {
+      stageObserver.observe(stage);
+    });
+
+    var stageScrollQueued = false;
+    function onStageScroll() {
+      if (stageScrollQueued) return;
+      stageScrollQueued = true;
+      requestAnimationFrame(function () {
+        stageScrollQueued = false;
+        checkMotionStages();
+      });
+    }
+    window.addEventListener("scroll", onStageScroll, { passive: true });
+    window.addEventListener("resize", onStageScroll, { passive: true });
+    window.addEventListener("load", checkMotionStages);
+    checkMotionStages();
+  }
+
+  if (reduced) {
+    ["numbers"].forEach(function (id) {
       const sec = document.getElementById(id);
       if (sec) animateDataSection(sec);
     });
-    if (capSection) {
-      capSectionVisible = true;
-      playCapPanel(document.querySelector(".cap-panel.is-active"));
+  }
+
+  /* Hero: CSS grid + pointer spotlight only (no canvas / idle loop) */
+  const hero = document.getElementById("intro");
+  const heroInner = hero && hero.querySelector(".hero__inner");
+  const canTrack =
+    !reduced &&
+    hero &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (canTrack) {
+    let targetX = 0.5;
+    let targetY = 0.42;
+    let currentX = targetX;
+    let currentY = targetY;
+    let parallaxX = 0;
+    let parallaxY = 0;
+    let targetParallaxX = 0;
+    let targetParallaxY = 0;
+    let running = false;
+    let heroVisible = true;
+    let rafId = 0;
+
+    function stopLoop() {
+      running = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
     }
+
+    function tick() {
+      rafId = 0;
+      if (!heroVisible || document.hidden) {
+        running = false;
+        return;
+      }
+
+      currentX += (targetX - currentX) * 0.16;
+      currentY += (targetY - currentY) * 0.16;
+      parallaxX += (targetParallaxX - parallaxX) * 0.14;
+      parallaxY += (targetParallaxY - parallaxY) * 0.14;
+
+      hero.style.setProperty("--mx", (currentX * 100).toFixed(1) + "%");
+      hero.style.setProperty("--my", (currentY * 100).toFixed(1) + "%");
+      if (heroInner) {
+        heroInner.style.transform =
+          "translate3d(" +
+          parallaxX.toFixed(1) + "px, " +
+          parallaxY.toFixed(1) + "px, 0)";
+      }
+
+      const moving =
+        Math.abs(targetX - currentX) > 0.0015 ||
+        Math.abs(targetY - currentY) > 0.0015 ||
+        Math.abs(targetParallaxX - parallaxX) > 0.08 ||
+        Math.abs(targetParallaxY - parallaxY) > 0.08;
+
+      if (moving) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        running = false;
+        if (!hero.classList.contains("is-tracking") && heroInner) {
+          heroInner.style.transform = "";
+        }
+      }
+    }
+
+    function startLoop() {
+      if (running || !heroVisible || document.hidden) return;
+      running = true;
+      rafId = requestAnimationFrame(tick);
+    }
+
+    hero.addEventListener("pointerenter", function () {
+      hero.classList.add("is-tracking");
+      startLoop();
+    });
+
+    hero.addEventListener("pointerleave", function () {
+      hero.classList.remove("is-tracking");
+      targetX = 0.5;
+      targetY = 0.42;
+      targetParallaxX = 0;
+      targetParallaxY = 0;
+      startLoop();
+    });
+
+    hero.addEventListener("pointermove", function (e) {
+      const rect = hero.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width;
+      const ny = (e.clientY - rect.top) / rect.height;
+      targetX = Math.min(1, Math.max(0, nx));
+      targetY = Math.min(1, Math.max(0, ny));
+      targetParallaxX = (nx - 0.5) * 2.5;
+      targetParallaxY = (ny - 0.5) * 1.8;
+      startLoop();
+    }, { passive: true });
+
+    if ("IntersectionObserver" in window) {
+      const heroIO = new IntersectionObserver(function (entries) {
+        heroVisible = !!(entries[0] && entries[0].isIntersecting);
+        if (!heroVisible) stopLoop();
+      }, { threshold: 0.05 });
+      heroIO.observe(hero);
+    }
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stopLoop();
+    });
   }
 })();

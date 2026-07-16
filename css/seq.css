@@ -1,0 +1,559 @@
+/* ===== Sequential in-content animations (FlareLane-like) ===== */
+
+@keyframes seq-pop {
+  0% { opacity: 0; transform: translateY(14px) scale(.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes seq-draw {
+  from { stroke-dashoffset: 220; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes seq-dot-pop {
+  0% { opacity: 0; transform: scale(0); }
+  70% { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes seq-check {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes seq-grow-y {
+  from { transform: scaleY(0); opacity: .4; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes seq-grow-x {
+  from { transform: scaleX(0); opacity: .3; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes seq-flash {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+  40% { box-shadow: 0 0 0 4px rgba(249, 115, 22, .28); }
+}
+
+@keyframes seq-cursor {
+  0%, 100% { transform: translate(10px, 10px); opacity: 0; }
+  18% { opacity: 1; transform: translate(4px, 4px); }
+  42% { transform: translate(0, 0) scale(.88); }
+  58% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { opacity: .75; transform: translate(2px, 3px); }
+}
+
+@keyframes seq-count-glow {
+  0% { color: #6b7280; transform: scale(1); }
+  40% { color: #16a34a; transform: scale(1.1); }
+  100% { color: #16a34a; transform: scale(1); }
+}
+
+@keyframes seq-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes seq-msg {
+  0% { opacity: 0; transform: translateY(12px) scale(.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes seq-pulse-live {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, .45); }
+  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+@keyframes seq-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes seq-rank-up {
+  0% { opacity: 0; transform: translateY(8px); background: #fff7ed; }
+  100% { opacity: 1; transform: translateY(0); background: #fff7ed; }
+}
+
+/* Per-card base delay so internals start after parent stage-enter */
+.process-col:nth-child(1) { --seq-base: 0s; }
+.process-col:nth-child(2) { --seq-base: .18s; }
+.process-col:nth-child(3) { --seq-base: .36s; }
+.process-col:nth-child(4) { --seq-base: .54s; }
+
+.prog-demo:nth-child(1) { --seq-base: .15s; }
+.prog-demo:nth-child(2) { --seq-base: .4s; }
+.prog-demo:nth-child(3) { --seq-base: .65s; }
+
+.scenario:nth-child(1) { --seq-base: .15s; }
+.scenario:nth-child(2) { --seq-base: .35s; }
+.scenario:nth-child(3) { --seq-base: .55s; }
+
+.kakao-phone:nth-child(1) { --seq-base: .25s; }
+.kakao-phone:nth-child(2) { --seq-base: .45s; }
+.kakao-phone:nth-child(3) { --seq-base: .65s; }
+
+/* Hidden until stage on */
+.motion-stage:not(.is-on) .seq-chart__line,
+.motion-stage:not(.is-on) .seq-chart__dot,
+.motion-stage:not(.is-on) .seq-chip,
+.motion-stage:not(.is-on) .seq-check,
+.motion-stage:not(.is-on) .seq-card,
+.motion-stage:not(.is-on) .seq-exec__win,
+.motion-stage:not(.is-on) .seq-exec__node,
+.motion-stage:not(.is-on) .seq-exec__line,
+.motion-stage:not(.is-on) .seq-stat,
+.motion-stage:not(.is-on) .seq-row,
+.motion-stage:not(.is-on) .mini-flow__node,
+.motion-stage:not(.is-on) .mini-flow__arrow,
+.motion-stage:not(.is-on) .mini-flow__stat,
+.motion-stage:not(.is-on) .mini-bars > div,
+.motion-stage:not(.is-on) .seq-flow-node,
+.motion-stage:not(.is-on) .seq-flow-join,
+.motion-stage:not(.is-on) .flow-branch,
+.motion-stage:not(.is-on) .seq-aside,
+.motion-stage:not(.is-on) .scenario__flow > *,
+.motion-stage:not(.is-on) .kakao-msg {
+  opacity: 0;
+}
+
+/* ---- Process 01: graph draws → chips appear ---- */
+.seq-chart__line {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  fill: none;
+}
+.seq-chart__dot { opacity: 0; transform-origin: center; transform-box: fill-box; }
+.seq-chart__meta { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.seq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.seq-chip--live {
+  background: #ecfdf5;
+  color: #15803d;
+}
+.seq-chip--live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+}
+
+.motion-stage.is-on .seq-chart__line--muted {
+  animation: seq-draw 1s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) forwards;
+}
+.motion-stage.is-on .seq-chart__line--main {
+  animation: seq-draw 1.15s var(--motion-ease) calc(var(--seq-base, 0s) + .4s) forwards;
+}
+.motion-stage.is-on .seq-chart__dot {
+  animation: seq-dot-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + 1.4s) forwards;
+}
+.motion-stage.is-on .seq-chip:nth-child(1) {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + 1.55s) both;
+}
+.motion-stage.is-on .seq-chip--live {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + 1.8s) both;
+}
+.motion-stage.is-on .seq-chip--live i {
+  animation: seq-pulse-live 1.4s ease-in-out calc(var(--seq-base, 0s) + 2s) infinite;
+}
+
+/* ---- Process 02: checklist cascade + checkmarks ---- */
+.check-list { list-style: none; display: grid; gap: 10px; margin: 0; padding: 0; }
+.seq-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  position: relative;
+}
+.seq-check em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+  color: #9ca3af;
+  width: 18px;
+}
+.seq-check span { flex: 1; }
+.seq-check::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  flex-shrink: 0;
+  opacity: 0;
+}
+.seq-check.is-done::after {
+  border-color: #3b82f6;
+  background: #3b82f6;
+  box-shadow: inset 0 0 0 2px #fff;
+}
+.seq-check.is-run::after {
+  border-color: var(--orange, #f97316);
+  border-top-color: transparent;
+}
+
+.motion-stage.is-on .seq-check:nth-child(1) {
+  animation: seq-pop .5s var(--motion-ease) calc(var(--seq-base, 0s) + .2s) both;
+}
+.motion-stage.is-on .seq-check:nth-child(2) {
+  animation: seq-pop .5s var(--motion-ease) calc(var(--seq-base, 0s) + .55s) both;
+}
+.motion-stage.is-on .seq-check:nth-child(3) {
+  animation: seq-pop .5s var(--motion-ease) calc(var(--seq-base, 0s) + .9s) both;
+}
+.motion-stage.is-on .seq-check.is-done:nth-child(1)::after {
+  animation: seq-check .4s var(--motion-ease) calc(var(--seq-base, 0s) + .45s) both;
+}
+.motion-stage.is-on .seq-check.is-done:nth-child(2)::after {
+  animation: seq-check .4s var(--motion-ease) calc(var(--seq-base, 0s) + .85s) both;
+}
+.motion-stage.is-on .seq-check.is-run::after {
+  opacity: 1;
+  animation: seq-spin .8s linear calc(var(--seq-base, 0s) + 1.25s) infinite;
+}
+
+/* ---- Process 03: cards stack → cursor taps approve ---- */
+.approve-stack { display: grid; gap: 8px; position: relative; }
+.seq-cursor {
+  position: absolute;
+  right: 10px;
+  bottom: -2px;
+  width: 12px;
+  height: 16px;
+  border: 2px solid #111;
+  border-radius: 2px 2px 6px 6px;
+  background: rgba(255, 255, 255, .75);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.motion-stage.is-on .seq-card:nth-child(1) {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) both;
+}
+.motion-stage.is-on .seq-card:nth-child(2) {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + .5s) both;
+}
+.motion-stage.is-on .seq-card.is-active {
+  animation:
+    seq-pop .5s var(--motion-ease) calc(var(--seq-base, 0s) + .85s) both,
+    seq-flash .7s ease calc(var(--seq-base, 0s) + 1.4s) 1;
+}
+.motion-stage.is-on .seq-cursor {
+  animation: seq-cursor 1.6s var(--motion-ease) calc(var(--seq-base, 0s) + 1.2s) both;
+}
+
+/* ---- Process 04: flow nodes → then stats react ---- */
+.seq-exec { display: grid; gap: 10px; }
+.seq-exec__win {
+  background: #0a0a0a;
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.seq-exec__node {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .08);
+  opacity: 0;
+}
+.seq-exec__node.is-done {
+  background: rgba(249, 115, 22, .25);
+  color: #fdba74;
+}
+.seq-exec__line {
+  width: 14px;
+  height: 2px;
+  background: rgba(255, 255, 255, .25);
+  border-radius: 2px;
+  transform-origin: left center;
+  opacity: 0;
+}
+.stat-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.seq-stat {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #6b7280;
+}
+.seq-stat b { margin-left: 4px; display: inline-block; }
+
+.motion-stage.is-on .seq-exec__win {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) both;
+}
+.motion-stage.is-on .seq-exec__node:nth-child(1) {
+  animation: seq-pop .35s var(--motion-ease) calc(var(--seq-base, 0s) + .35s) both;
+}
+.motion-stage.is-on .seq-exec__line:nth-child(2) {
+  animation: seq-grow-x .3s var(--motion-ease) calc(var(--seq-base, 0s) + .55s) both;
+}
+.motion-stage.is-on .seq-exec__node:nth-child(3) {
+  animation: seq-pop .35s var(--motion-ease) calc(var(--seq-base, 0s) + .7s) both;
+}
+.motion-stage.is-on .seq-exec__line:nth-child(4) {
+  animation: seq-grow-x .3s var(--motion-ease) calc(var(--seq-base, 0s) + .9s) both;
+}
+.motion-stage.is-on .seq-exec__node:nth-child(5) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + 1.05s) both;
+}
+.motion-stage.is-on .seq-stat:nth-child(1) {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + 1.35s) both;
+}
+.motion-stage.is-on .seq-stat:nth-child(2) {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + 1.6s) both;
+}
+.motion-stage.is-on .seq-stat b {
+  animation: seq-count-glow .55s var(--motion-ease) both;
+}
+.motion-stage.is-on .seq-stat:nth-child(1) b {
+  animation-delay: calc(var(--seq-base, 0s) + 1.5s);
+}
+.motion-stage.is-on .seq-stat:nth-child(2) b {
+  animation-delay: calc(var(--seq-base, 0s) + 1.75s);
+}
+
+/* ---- Prog demo: rows → rank flash → alert ---- */
+.seq-row--update {
+  border-color: #fed7aa !important;
+  background: #fff7ed;
+}
+.seq-row--update strong.is-up { color: #ea580c; }
+
+.motion-stage.is-on .seq-row[data-seq="1"] {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .1s) both;
+}
+.motion-stage.is-on .seq-row[data-seq="2"] {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .35s) both;
+}
+.motion-stage.is-on .seq-row[data-seq="3"] {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .6s) both;
+}
+.motion-stage.is-on .seq-row[data-seq="4"] {
+  animation:
+    seq-rank-up .5s var(--motion-ease) calc(var(--seq-base, 0s) + .95s) both,
+    seq-flash .8s ease calc(var(--seq-base, 0s) + 1.2s) 1;
+}
+.motion-stage.is-on .seq-row[data-seq="5"] {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + 1.4s) both;
+}
+
+.mini-flow__node,
+.mini-flow__arrow,
+.mini-flow__stat { opacity: 0; }
+.motion-stage.is-on .mini-flow__node:nth-child(1) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) both;
+}
+.motion-stage.is-on .mini-flow__arrow:nth-child(2) {
+  animation: seq-pop .3s var(--motion-ease) calc(var(--seq-base, 0s) + .4s) both;
+}
+.motion-stage.is-on .mini-flow__node:nth-child(3) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .55s) both;
+}
+.motion-stage.is-on .mini-flow__arrow:nth-child(4) {
+  animation: seq-pop .3s var(--motion-ease) calc(var(--seq-base, 0s) + .8s) both;
+}
+.motion-stage.is-on .mini-flow__node:nth-child(5) {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + .95s) both;
+}
+.motion-stage.is-on .mini-flow__stat {
+  animation: seq-pop .45s var(--motion-ease) calc(var(--seq-base, 0s) + 1.3s) both;
+}
+.motion-stage.is-on .mini-flow__stat b {
+  display: inline-block;
+  animation: seq-count-glow .55s var(--motion-ease) calc(var(--seq-base, 0s) + 1.5s) both;
+}
+
+.motion-stage.is-on .mini-bars > div:nth-child(1) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) both;
+}
+.motion-stage.is-on .mini-bars > div:nth-child(2) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .4s) both;
+}
+.motion-stage.is-on .mini-bars > div:nth-child(3) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .65s) both;
+}
+.motion-stage.is-on .mini-bars i::after {
+  transform-origin: left center;
+  animation: seq-bar .85s var(--motion-ease) both;
+}
+.motion-stage.is-on .mini-bars > div:nth-child(1) i::after {
+  animation-delay: calc(var(--seq-base, 0s) + .35s);
+}
+.motion-stage.is-on .mini-bars > div:nth-child(2) i::after {
+  animation-delay: calc(var(--seq-base, 0s) + .6s);
+}
+.motion-stage.is-on .mini-bars > div:nth-child(3) i::after {
+  animation-delay: calc(var(--seq-base, 0s) + .85s);
+}
+
+/* ---- Workflow: trigger → line → action → branch ---- */
+.flow-join {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding-left: 10px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+.flow-join__line {
+  width: 2px;
+  height: 18px;
+  background: #cbd5e1;
+  border-radius: 2px;
+  transform-origin: top center;
+  display: block;
+}
+.flow-join em { font-style: normal; }
+
+.motion-stage.is-on .seq-flow-node[data-seq="1"] {
+  animation: seq-pop .5s var(--motion-ease) .1s both;
+}
+.motion-stage.is-on .seq-flow-join[data-seq="2"] {
+  animation: seq-pop .35s var(--motion-ease) .5s both;
+}
+.motion-stage.is-on .seq-flow-join[data-seq="2"] .flow-join__line {
+  animation: seq-grow-y .4s var(--motion-ease) .5s both;
+}
+.motion-stage.is-on .seq-flow-node[data-seq="3"] {
+  animation: seq-pop .5s var(--motion-ease) .85s both;
+}
+.motion-stage.is-on .seq-flow-join[data-seq="4"] {
+  animation: seq-pop .35s var(--motion-ease) 1.2s both;
+}
+.motion-stage.is-on .seq-flow-join[data-seq="4"] .flow-join__line {
+  animation: seq-grow-y .4s var(--motion-ease) 1.2s both;
+}
+.motion-stage.is-on .flow-branch[data-seq="5"] {
+  animation: seq-pop .55s var(--motion-ease) 1.55s both;
+}
+.motion-stage.is-on .flow-branch .flow-node--yes {
+  animation: seq-pop .45s var(--motion-ease) 1.7s both;
+}
+.motion-stage.is-on .flow-branch .flow-node--no {
+  animation:
+    seq-pop .45s var(--motion-ease) 1.95s both,
+    seq-flash .7s ease 2.35s 1;
+}
+
+.motion-stage.is-on .seq-aside[data-seq="3"] {
+  animation: seq-pop .45s var(--motion-ease) .95s both;
+}
+.motion-stage.is-on .seq-aside[data-seq="4"] {
+  animation: seq-pop .45s var(--motion-ease) 1.25s both;
+}
+.motion-stage.is-on .seq-aside[data-seq="5"] {
+  animation: seq-pop .45s var(--motion-ease) 1.6s both;
+}
+
+.motion-stage.is-on .flow-canvas__main > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Scenarios: step → arrow → next → result ---- */
+.motion-stage.is-on .scenario__flow > *:nth-child(1) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) both;
+}
+.motion-stage.is-on .scenario__flow > *:nth-child(2) {
+  animation: seq-pop .35s var(--motion-ease) calc(var(--seq-base, 0s) + .45s) both;
+}
+.motion-stage.is-on .scenario__flow > *:nth-child(3) {
+  animation: seq-pop .4s var(--motion-ease) calc(var(--seq-base, 0s) + .7s) both;
+}
+.motion-stage.is-on .scenario__flow > *:nth-child(4) {
+  animation: seq-pop .35s var(--motion-ease) calc(var(--seq-base, 0s) + 1s) both;
+}
+.motion-stage.is-on .scenario__flow > *:nth-child(5) {
+  animation:
+    seq-pop .5s var(--motion-ease) calc(var(--seq-base, 0s) + 1.3s) both,
+    seq-flash .75s ease calc(var(--seq-base, 0s) + 1.65s) 1;
+}
+
+/* ---- Kakao: messages appear in conversation order ---- */
+.kakao-msg { opacity: 0; }
+.motion-stage.is-on .kakao-phone__body > .kakao-msg:nth-child(2) {
+  animation: seq-msg .45s var(--motion-ease) calc(var(--seq-base, 0s) + .15s) both;
+}
+.motion-stage.is-on .kakao-phone__body > .kakao-msg:nth-child(3) {
+  animation: seq-msg .45s var(--motion-ease) calc(var(--seq-base, 0s) + .55s) both;
+}
+.motion-stage.is-on .kakao-phone__body > .kakao-msg:nth-child(4) {
+  animation: seq-msg .45s var(--motion-ease) calc(var(--seq-base, 0s) + .95s) both;
+}
+
+/* Soft float only on fine pointer, and only one at a time vibe — keep light */
+@media (hover: hover) and (pointer: fine) {
+  .motion-stage.is-on .process-col:nth-child(1) .process-col__visual,
+  .motion-stage.is-on .prog-demo:nth-child(1) .prog-demo__ui {
+    animation: float-y-sm 5.5s ease-in-out 2.4s infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-stage:not(.is-on) .seq-chart__line,
+  .motion-stage:not(.is-on) .seq-chart__dot,
+  .motion-stage:not(.is-on) .seq-chip,
+  .motion-stage:not(.is-on) .seq-check,
+  .motion-stage:not(.is-on) .seq-card,
+  .motion-stage:not(.is-on) .seq-exec__win,
+  .motion-stage:not(.is-on) .seq-stat,
+  .motion-stage:not(.is-on) .seq-row,
+  .motion-stage:not(.is-on) .mini-flow__node,
+  .motion-stage:not(.is-on) .mini-flow__arrow,
+  .motion-stage:not(.is-on) .mini-flow__stat,
+  .motion-stage:not(.is-on) .mini-bars > div,
+  .motion-stage:not(.is-on) .seq-flow-node,
+  .motion-stage:not(.is-on) .seq-flow-join,
+  .motion-stage:not(.is-on) .flow-branch,
+  .motion-stage:not(.is-on) .seq-aside,
+  .motion-stage:not(.is-on) .scenario__flow > *,
+  .motion-stage:not(.is-on) .kakao-msg,
+  .seq-chart__line,
+  .seq-chart__dot,
+  .seq-chip,
+  .seq-check,
+  .seq-card,
+  .seq-exec__win,
+  .seq-exec__node,
+  .seq-exec__line,
+  .seq-stat,
+  .seq-row,
+  .mini-flow__node,
+  .mini-flow__arrow,
+  .mini-flow__stat,
+  .flow-join__line,
+  .seq-cursor,
+  .kakao-msg {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .motion-stage.is-on .process-col__visual,
+  .motion-stage.is-on .prog-demo__ui {
+    animation: none !important;
+  }
+}

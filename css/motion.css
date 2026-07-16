@@ -1,0 +1,181 @@
+/* ===== FlareLane-like motion layer ===== */
+
+:root {
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+  --motion-duration: .85s;
+}
+
+/* Scroll reveal — no blur (blur forces expensive paint) */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity .7s var(--motion-ease),
+    transform .7s var(--motion-ease);
+  transition-delay: var(--d, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Stagger groups: children cascade when parent is in view */
+.stagger > .reveal,
+.stagger > * {
+  --d: calc(var(--i, 0) * 90ms);
+}
+
+/* Card hover lift */
+.cap-tile,
+.prog-demo,
+.scenario {
+  transition:
+    transform .35s var(--motion-ease),
+    box-shadow .35s var(--motion-ease),
+    border-color .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .motion-stage.is-on .cap-tile:hover,
+  .motion-stage.is-on .prog-demo:hover,
+  .motion-stage.is-on .scenario:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .08);
+  }
+
+  .motion-stage.is-on .flow-node:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .07);
+  }
+}
+
+/* Soft floating for UI mock pieces */
+@keyframes float-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -8px, 0); }
+}
+
+@keyframes float-y-sm {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: .7; }
+}
+
+@keyframes draw-line {
+  from { stroke-dashoffset: 180; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes grow-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: translateY(12px) scale(.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes check-pop {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes cursor-tap {
+  0%, 100% { transform: translate(0, 0); }
+  40% { transform: translate(-4px, -6px); }
+  55% { transform: translate(-2px, -2px) scale(.94); }
+  70% { transform: translate(0, 0); }
+}
+
+.float-ui {
+  animation: float-y 4.2s ease-in-out infinite;
+}
+
+.float-ui--delay {
+  animation: float-y-sm 5s ease-in-out infinite;
+  animation-delay: .6s;
+}
+
+.float-ui--delay-2 {
+  animation: float-y 4.8s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* Stage in-view: cascade enter */
+@keyframes stage-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.motion-stage > .process-col,
+.motion-stage > .prog-demo,
+.motion-stage > .scenario,
+.motion-stage > .kakao-phone,
+.motion-stage > .cap-tile,
+.motion-stage > article {
+  opacity: 0;
+}
+
+.motion-stage.is-on > .process-col,
+.motion-stage.is-on > .prog-demo,
+.motion-stage.is-on > .scenario,
+.motion-stage.is-on > .kakao-phone,
+.motion-stage.is-on > .cap-tile,
+.motion-stage.is-on > article {
+  animation: stage-enter .85s var(--motion-ease) both;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+
+/* Stage children ignore standalone reveal hide once staged */
+.motion-stage.is-on .reveal {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.motion-stage.is-on > .reveal {
+  animation: stage-enter .85s var(--motion-ease) both;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+
+/* Detailed in-content sequences live in seq.css */
+
+.mini-ui__foot .dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+/* Kakao phones: enter only (continuous float caused scroll jank) */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .motion-stage > .process-col,
+  .motion-stage > .prog-demo,
+  .motion-stage > .scenario,
+  .motion-stage > .kakao-phone,
+  .motion-stage > .cap-tile,
+  .motion-stage > article {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .float-ui,
+  .float-ui--delay,
+  .float-ui--delay-2,
+  .mini-ui__foot .dot {
+    animation: none !important;
+  }
+}
