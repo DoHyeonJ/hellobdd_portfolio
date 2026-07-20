@@ -1,0 +1,230 @@
+/* ===== Program feature spotlights (UI fragments + captions) ===== */
+
+.prog-item--spotlight {
+  gap: 18px;
+}
+@media (min-width: 860px) {
+  .prog-item--spotlight {
+    grid-template-columns: 1fr;
+  }
+}
+
+.prog-spots {
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 860px) {
+  .prog-spots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+.prog-spot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  min-width: 0;
+}
+.prog-spot__cap strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 4px;
+  letter-spacing: -.01em;
+}
+.prog-spot__cap p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+/* Dark mini UI fragment */
+.ui-frag {
+  --app-bg: #2b2b2b;
+  --app-panel: #323232;
+  --app-border: #3c3f41;
+  --app-text: #dcdcdc;
+  --app-muted: #9a9a9a;
+  --app-blue: #5c85d6;
+  --app-green: #4caf50;
+  --app-orange: #e67e22;
+  --app-red: #e74c3c;
+  --app-select: #2b579a;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--app-bg);
+  border: 1px solid #1a1a1a;
+  color: var(--app-text);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: left;
+}
+.ui-frag__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: #252525;
+  border-bottom: 1px solid #1f1f1f;
+  font-size: 10px;
+  font-weight: 700;
+  color: #eee;
+}
+.ui-frag__body {
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+
+.ui-frag .app-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--app-border);
+  border-radius: 4px;
+  background: #2a2a2a;
+  max-height: 72px;
+  overflow: hidden;
+}
+.ui-frag .app-list li {
+  padding: 5px 8px;
+  color: #ddd;
+  border-bottom: 1px solid #333;
+}
+.ui-frag .app-list li:last-child { border-bottom: none; }
+.ui-frag .app-list li.is-on {
+  background: var(--app-select);
+  color: #fff;
+}
+
+.ui-frag .app-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ui-frag .app-btn {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 4px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  background: #4a4a4a;
+  text-align: center;
+  white-space: nowrap;
+}
+.ui-frag .app-btn--blue { background: var(--app-blue); }
+.ui-frag .app-btn--green { background: var(--app-green); }
+.ui-frag .app-btn--orange { background: var(--app-orange); }
+.ui-frag .app-btn--red { background: #d35400; }
+.ui-frag .app-btn--danger { background: var(--app-red); }
+.ui-frag .app-btn--run {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 8px;
+  font-size: 12px;
+  background: var(--app-green);
+}
+
+.ui-frag .app-tabs {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+.ui-frag .app-tabs span {
+  border: 1px solid var(--app-border);
+  border-radius: 4px 4px 0 0;
+  background: #2b2b2b;
+  color: #aaa;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 5px 6px;
+}
+.ui-frag .app-tabs span.is-on {
+  background: #3c3f41;
+  color: #fff;
+}
+
+.ui-frag .app-radios,
+.ui-frag .app-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 10px;
+  color: #ccc;
+}
+.ui-frag .app-radios label,
+.ui-frag .app-checks label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ui-frag .app-nums {
+  display: grid;
+  gap: 4px;
+  font-size: 10px;
+  color: #bbb;
+}
+.ui-frag .app-nums input {
+  width: 40px;
+  margin-left: 4px;
+  background: #3c3f41;
+  border: 1px solid #4a4a4a;
+  border-radius: 3px;
+  color: #fff;
+  padding: 2px 4px;
+  font-size: 10px;
+}
+.ui-frag .app-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 8px;
+  background: var(--app-select);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+}
+.ui-frag .app-task em {
+  font-style: normal;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, .25);
+}
+.ui-frag .app-log {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9px;
+}
+.ui-frag .app-log th,
+.ui-frag .app-log td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #3a3a3a;
+  text-align: left;
+  color: #bbb;
+}
+.ui-frag .app-log th { color: #888; font-weight: 700; }
+.ui-frag .app-log .is-link { color: #7eb6ff; }
+
+.prog-ui-slot--filled {
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  align-items: stretch;
+  justify-content: flex-start;
+}

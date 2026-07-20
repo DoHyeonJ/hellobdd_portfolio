@@ -3,20 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="헬로비디디 자동화 프로그램 — 순위 모니터링, 플랫폼 자동화, AI 분석, 소통·바이럴">
-  <title>프로그램 상세 | 헬로비디디</title>
+  <title>프로그램 전체 | 헬로비디디</title>
+  <meta name="description" content="N사·뷰티 플랫폼·모니터링까지. 헬로비디디가 구축한 자동화 프로그램 목록을 확인하세요.">
+  <meta name="theme-color" content="#0b0c10">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="헬로비디디">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:url" content="https://pf.dainopick.com/programs.html">
+  <meta property="og:title" content="프로그램 전체 | 헬로비디디">
+  <meta property="og:description" content="N사 자동화, 뷰티 플랫폼 자동화, 모니터링·감정 분석. 필요한 방향의 프로그램이 있는지 바로 확인하세요.">
+  <meta property="og:image" content="https://pf.dainopick.com/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="프로그램 전체 | 헬로비디디">
+  <meta name="twitter:description" content="N사·뷰티·모니터링 자동화 프로그램 목록.">
+  <meta name="twitter:image" content="https://pf.dainopick.com/img/og.png">
+
+  <link rel="canonical" href="https://pf.dainopick.com/programs.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <link rel="stylesheet" href="css/landing.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/landing.css?v=9">
+  <link rel="stylesheet" href="css/prog-ui.css?v=3">
 </head>
 <body class="page-programs">
   <header class="header header--dark" id="top">
     <div class="header__inner">
-      <a href="index.html" class="logo logo--img" aria-label="HELLOBDD">
-        <img class="brand-lockup" src="img/logo-lockup.png?v=1" alt="HELLOBDD" width="200" height="40">
-      </a>
+      <a href="index.html" class="logo" aria-label="헬로비디디"><span>헬로</span>비디디</a>
       <div class="header__links">
         <a href="index.html#solutions">가능</a>
         <a href="index.html#contact" class="nav__cta">문의</a>
@@ -27,79 +44,360 @@
   <main>
     <section class="programs-hero">
       <div class="container">
-        <h1>어떤 프로그램을<br>어떻게 쓰나요</h1>
-        <p>대행사·병·의원 현장에서 반복되는 작업을 기준으로 프로그램을 설계합니다. 필요한 기능만 조합해 인건비는 줄이고, 팀은 핵심 업무에 집중할 수 있게 합니다.</p>
+        <p class="programs-hero__eyebrow">PROGRAM CATALOG</p>
+        <h1>어떤 자동화가<br>가능한지 확인하세요</h1>
+        <p>고객이 원하는 방향과 맞는 구축 이력이 있는지, 아래 목록에서 먼저 체크해 보시면 됩니다. 화면은 고객사 보안상 원본 대신 <strong>프로그램 UI를 토대로 핵심 기능만</strong> 재현·설명하며, 항목은 순차적으로 채워집니다.</p>
+        <p class="programs-hero__note">N사·뷰티뿐 아니라 <strong>요청하신 플랫폼 자동화는 대부분 맞춤 구축이 가능</strong>합니다.</p>
       </div>
     </section>
 
-    <section class="program-block" id="rank">
+    <!-- 목차: 빠른 체크용 -->
+    <nav class="prog-toc" aria-label="프로그램 목차">
       <div class="container">
-        <p class="program-block__label">01 · N사 · 플레이스</p>
-        <h2>키워드 순위 모니터링</h2>
-        <p class="program-block__lead">지정한 검색·플레이스 키워드의 순위를 주기적으로 수집하고, 변동이 있을 때만 팀에 알려 줍니다. 매일 수동으로 확인하던 시간을 없앱니다.</p>
-        <ul class="program-points">
-          <li><strong>활용:</strong> 대행사 계정별·매장별 키워드 패키지 운영</li>
-          <li><strong>동작:</strong> 스케줄 수집 → 순위 비교 → 임계값 초과 시 알림</li>
-          <li><strong>효과:</strong> 확인 인력 최소화, 이슈 대응 속도 향상</li>
-        </ul>
+        <div class="prog-toc__head">
+          <h2>프로그램 목차</h2>
+          <p class="prog-toc__sub">카테고리·항목을 눌러 해당 구간으로 이동합니다.</p>
+        </div>
+
+        <!-- Mobile: compact accordion -->
+        <div class="prog-toc__accordion">
+          <details class="prog-toc__fold">
+            <summary>01 · N사 자동화</summary>
+            <ul>
+              <li><a href="#n-cafe-comment">카페 댓글</a></li>
+              <li><a href="#n-cafe-viral">카페 게시글 바이럴</a></li>
+              <li><a href="#n-blog-neighbor">블로그 이웃·서이추·댓글</a></li>
+            </ul>
+          </details>
+          <details class="prog-toc__fold">
+            <summary>02 · 뷰티 플랫폼</summary>
+            <ul>
+              <li><a href="#beauty-viral">바이럴 자동화</a></li>
+              <li><a href="#beauty-post">댓글 / 게시글</a></li>
+              <li><a href="#beauty-review">후기 자동화</a></li>
+              <li><a href="#beauty-event">이벤트 신청</a></li>
+            </ul>
+          </details>
+          <details class="prog-toc__fold">
+            <summary>03 · 모니터링</summary>
+            <ul>
+              <li><a href="#monitor-place">플레이스·블로그·카페 분석</a></li>
+              <li><a href="#monitor-sentiment">감정 분석</a></li>
+            </ul>
+          </details>
+          <a class="prog-toc__fold prog-toc__fold--link" href="#any-platform">04 · 전 플랫폼 맞춤</a>
+        </div>
+
+        <!-- Desktop: full grid -->
+        <div class="prog-toc__grid">
+          <div class="prog-toc__col">
+            <a class="prog-toc__cat" href="#n-auto">01 · N사 자동화</a>
+            <ul>
+              <li><a href="#n-cafe-comment">카페 댓글</a></li>
+              <li><a href="#n-cafe-viral">카페 게시글 바이럴</a></li>
+              <li><a href="#n-blog-neighbor">블로그 이웃관리 · 서이추 · 댓글</a></li>
+            </ul>
+          </div>
+          <div class="prog-toc__col">
+            <a class="prog-toc__cat" href="#beauty-auto">02 · 뷰티 플랫폼 자동화</a>
+            <ul>
+              <li><a href="#beauty-viral">바이럴 자동화</a></li>
+              <li><a href="#beauty-post">댓글 / 게시글 자동화</a></li>
+              <li><a href="#beauty-review">후기 자동화</a></li>
+              <li><a href="#beauty-event">이벤트 신청 자동화</a></li>
+            </ul>
+          </div>
+          <div class="prog-toc__col">
+            <a class="prog-toc__cat" href="#monitor">03 · 모니터링 프로그램</a>
+            <ul>
+              <li><a href="#monitor-place">플레이스 · 블로그 · 카페 모니터링 분석</a></li>
+              <li><a href="#monitor-sentiment">감정 분석</a></li>
+            </ul>
+          </div>
+          <div class="prog-toc__col prog-toc__col--note">
+            <a class="prog-toc__cat" href="#any-platform">04 · 전 플랫폼 맞춤</a>
+            <p>목록에 없어도 문의 주시면 가능 여부를 바로 확인해 드립니다.</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 01 N사 -->
+    <section class="prog-cat" id="n-auto">
+      <div class="container">
+        <header class="prog-cat__head">
+          <p class="prog-cat__label">01</p>
+          <h2>N사 자동화</h2>
+          <p class="prog-cat__desc">카페·블로그 중심의 반복 소통·확산·이웃 관리를 프로그램으로 고정합니다.</p>
+        </header>
+
+                <article class="prog-item prog-item--spotlight" id="n-cafe-comment">
+          <div class="prog-item__copy">
+            <h3>카페 댓글</h3>
+            <p>다중 계정으로 N사 카페 게시글에 댓글을 자동 작성합니다. 아래는 프로그램 UI를 토대로 뽑은 핵심 기능 포인트입니다.</p>
+            <ul class="prog-item__tags">
+              <li>다중 계정</li>
+              <li>AI · 수동 댓글</li>
+              <li>작업 모니터</li>
+              <li>테더링</li>
+            </ul>
+          </div>
+          <div class="prog-spots" aria-label="카페 댓글 핵심 기능">
+            <figure class="prog-spot">
+              <div class="ui-frag" aria-hidden="true">
+                <div class="ui-frag__bar">계정 관리</div>
+                <div class="ui-frag__body">
+                  <ul class="app-list">
+                    <li class="is-on">ops_account_01</li>
+                    <li>ops_account_02</li>
+                    <li>ops_account_03</li>
+                  </ul>
+                  <div class="app-row">
+                    <span class="app-btn app-btn--blue">그룹 관리</span>
+                    <span class="app-btn app-btn--green">검증</span>
+                    <span class="app-btn app-btn--orange">일괄 검증</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption class="prog-spot__cap">
+                <strong>계정 · 그룹 운영</strong>
+                <p>여러 계정을 묶어 검증하고, 카페·게시판 선택은 검증된 계정 기준으로 진행합니다.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="prog-spot">
+              <div class="ui-frag" aria-hidden="true">
+                <div class="ui-frag__bar">댓글 · 작업 설정</div>
+                <div class="ui-frag__body">
+                  <div class="app-tabs">
+                    <span>카페 설정</span>
+                    <span class="is-on">댓글 설정</span>
+                    <span>후처리</span>
+                  </div>
+                  <div class="app-radios">
+                    <label><input type="radio" disabled> AI 댓글</label>
+                    <label><input type="radio" checked disabled> 수동 댓글</label>
+                  </div>
+                  <div class="app-nums">
+                    <label>기본 간격 <input value="10" readonly> 초</label>
+                    <label>오차(±) <input value="6" readonly> 초</label>
+                  </div>
+                  <div class="app-checks">
+                    <label><input type="checkbox" checked disabled> 중복 방지</label>
+                    <label><input type="checkbox" checked disabled> 좋아요</label>
+                  </div>
+                </div>
+              </div>
+              <figcaption class="prog-spot__cap">
+                <strong>AI / 수동 · 간격 · 후처리</strong>
+                <p>댓글 타입, 작성 간격·오차, 중복 방지, AI 후처리 프롬프트까지 운영 정책을 맞춥니다.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="prog-spot">
+              <div class="ui-frag" aria-hidden="true">
+                <div class="ui-frag__bar">모니터링 · 실행</div>
+                <div class="ui-frag__body">
+                  <div class="app-task">
+                    <span>#1 URL 직접등록 [댓글]</span>
+                    <em>대기</em>
+                  </div>
+                  <div class="app-checks">
+                    <label><input type="checkbox" disabled> 작업 반복</label>
+                    <label><input type="checkbox" disabled> IP 테더링</label>
+                  </div>
+                  <table class="app-log">
+                    <thead><tr><th>시간</th><th>메시지</th></tr></thead>
+                    <tbody>
+                      <tr><td>14:05</td><td class="is-link">현재 IP: ***.***.***.***</td></tr>
+                    </tbody>
+                  </table>
+                  <span class="app-btn app-btn--run">실행</span>
+                </div>
+              </div>
+              <figcaption class="prog-spot__cap">
+                <strong>작업 큐 · 로그 · 실행</strong>
+                <p>대기열 추가·삭제, 반복·테더링, 실시간 로그를 확인한 뒤 한 번에 실행합니다.</p>
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+
+<article class="prog-item" id="n-cafe-viral">
+          <div class="prog-item__copy">
+            <h3>카페 게시글 바이럴</h3>
+            <p>게시글 작성·배포 흐름을 자동화해, 바이럴용 반복 발행을 사람이 일일이 하지 않아도 되게 합니다.</p>
+            <ul class="prog-item__tags">
+              <li>게시 자동화</li>
+              <li>시나리오 운영</li>
+              <li>계정·채널 관리</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="n-cafe-viral" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
+
+        <article class="prog-item" id="n-blog-neighbor">
+          <div class="prog-item__copy">
+            <h3>블로그 이웃관리 · 서이추 · 댓글</h3>
+            <p>이웃 추가·서로이웃·댓글 등 블로그 운영의 반복 루틴을 프로그램화합니다. (다이노픽 계열 운영 경험 포함)</p>
+            <ul class="prog-item__tags">
+              <li>서이추</li>
+              <li>이웃 관리</li>
+              <li>댓글 루틴</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="n-blog-neighbor" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="program-block" id="platform">
+    <!-- 02 뷰티 -->
+    <section class="prog-cat prog-cat--soft" id="beauty-auto">
       <div class="container">
-        <p class="program-block__label">02 · 병·의원 · 플랫폼</p>
-        <h2>플랫폼 데이터 자동 수집</h2>
-        <p class="program-block__lead">의료·뷰티 정보 플랫폼 등에서 노출·리뷰·경쟁 데이터를 모아 정제하고, 요약 리포트로 전달합니다. 수집 자체는 프로그램이 담당합니다.</p>
-        <ul class="program-points">
-          <li><strong>활용:</strong> 병원·클리닉 다매장 모니터링, 대행 리포트 자동화</li>
-          <li><strong>동작:</strong> 멀티 소스 수집 → 정규화 → 일/주 리포트</li>
-          <li><strong>효과:</strong> 일 수 시간 작업 → 수십 분 수준으로 절감</li>
-        </ul>
+        <header class="prog-cat__head">
+          <p class="prog-cat__label">02</p>
+          <h2>뷰티 플랫폼 자동화</h2>
+          <p class="prog-cat__desc">병·의원·뷰티 플랫폼에서 반복되는 바이럴·게시·후기·이벤트 신청을 맞춤 자동화합니다.</p>
+        </header>
+
+        <article class="prog-item" id="beauty-viral">
+          <div class="prog-item__copy">
+            <h3>바이럴 자동화</h3>
+            <p>플랫폼 내 확산·노출 작업을 스케줄·조건 기반으로 돌려, 수동 클릭·입력 시간을 줄입니다.</p>
+            <ul class="prog-item__tags">
+              <li>스케줄</li>
+              <li>다계정 운영</li>
+              <li>로그·리포트</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="beauty-viral" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
+
+        <article class="prog-item" id="beauty-post">
+          <div class="prog-item__copy">
+            <h3>댓글 / 게시글 자동화</h3>
+            <p>댓글·게시글 작성과 등록을 시나리오화해, 운영팀이 핵심 카피·전략에만 집중할 수 있게 합니다.</p>
+            <ul class="prog-item__tags">
+              <li>댓글</li>
+              <li>게시글</li>
+              <li>템플릿 운영</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="beauty-post" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
+
+        <article class="prog-item" id="beauty-review">
+          <div class="prog-item__copy">
+            <h3>후기 자동화</h3>
+            <p>후기 등록·관리에 드는 반복 입력을 자동화하고, 상태 확인·리포트를 운영 흐름에 붙입니다.</p>
+            <ul class="prog-item__tags">
+              <li>후기 등록</li>
+              <li>상태 추적</li>
+              <li>알림</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="beauty-review" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
+
+        <article class="prog-item" id="beauty-event">
+          <div class="prog-item__copy">
+            <h3>이벤트 신청 자동화</h3>
+            <p>이벤트·체험단 등 신청 폼의 반복 접수를 프로그램으로 처리해, 놓침과 수기 입력을 줄입니다.</p>
+            <ul class="prog-item__tags">
+              <li>신청 자동화</li>
+              <li>스케줄·제한</li>
+              <li>결과 기록</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="beauty-event" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="program-block" id="ai">
+    <!-- 03 모니터링 -->
+    <section class="prog-cat" id="monitor">
       <div class="container">
-        <p class="program-block__label">03 · AI · 데이터</p>
-        <h2>여론·이슈 AI 분석</h2>
-        <p class="program-block__lead">리뷰와 커뮤니티 멘션을 모아 긍정/중립/부정과 이슈 키워드를 분류합니다. 사람이 전부 읽지 않아도 이상 징후를 빠르게 잡을 수 있습니다.</p>
-        <ul class="program-points">
-          <li><strong>활용:</strong> 브랜드 평판 관리, 병원 후기 케어, 캠페인 피드백</li>
-          <li><strong>동작:</strong> 수집 → AI 분류 → 대시보드·알림</li>
-          <li><strong>효과:</strong> 이슈 감지 시간을 수 시간 → 실시간 수준으로</li>
-        </ul>
+        <header class="prog-cat__head">
+          <p class="prog-cat__label">03</p>
+          <h2>모니터링 프로그램</h2>
+          <p class="prog-cat__desc">플레이스·블로그·카페 데이터를 모아 분석하고, 감정·이슈를 빠르게 잡습니다.</p>
+        </header>
+
+        <article class="prog-item" id="monitor-place">
+          <div class="prog-item__copy">
+            <h3>플레이스 · 블로그 · 카페 모니터링 분석</h3>
+            <p>순위·노출·게시·반응 등을 주기 수집하고 비교해, 변동이 있을 때 팀에 전달합니다. (하이랭크 계열 운영 경험 포함)</p>
+            <ul class="prog-item__tags">
+              <li>순위·노출</li>
+              <li>다채널 수집</li>
+              <li>변동 알림</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="monitor-place" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
+
+        <article class="prog-item" id="monitor-sentiment">
+          <div class="prog-item__copy">
+            <h3>감정 분석</h3>
+            <p>리뷰·멘션을 긍정/중립/부정으로 분류하고 이슈 키워드를 뽑아, 사람이 전부 읽지 않아도 이상 징후를 잡게 합니다.</p>
+            <ul class="prog-item__tags">
+              <li>감정 분류</li>
+              <li>이슈 키워드</li>
+              <li>실시간 알림</li>
+            </ul>
+          </div>
+          <div class="prog-ui-slot" data-ui="monitor-sentiment" aria-label="프로그램 UI 자리">
+            <span class="prog-ui-slot__label">준비중</span>
+            <span class="prog-ui-slot__hint">기능 포인트는 순차적으로 채워집니다</span>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="program-block" id="comms">
+    <!-- 04 전 플랫폼 -->
+    <section class="prog-cat prog-cat--soft" id="any-platform">
       <div class="container">
-        <p class="program-block__label">04 · 소통 · 바이럴</p>
-        <h2>소통·바이럴 업무 자동화</h2>
-        <p class="program-block__lead">메신저·커뮤니티 중심의 반복 소통, 배포 작업을 시나리오화합니다. 필요 시 테더링·프록시 등 운영 인프라까지 함께 맞춥니다.</p>
-        <ul class="program-points">
-          <li><strong>활용:</strong> 대량 반복 작업 경감, 채널별 시나리오 운영</li>
-          <li><strong>동작:</strong> 트리거 → 대기/분기 → 메시지·액션 실행</li>
-          <li><strong>효과:</strong> 같은 인력으로 처리량 확대, 인건비 효율 개선</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="program-block" id="services">
-      <div class="container">
-        <p class="program-block__label">05 · 자체 서비스</p>
-        <h2>하이랭크 · 다이노픽</h2>
-        <p class="program-block__lead">실제 운영 중인 서비스로 검증된 엔진을 바탕으로, 고객사 맞춤 프로그램에도 동일한 안정성을 적용합니다.</p>
-        <ul class="program-points">
-          <li><strong>하이랭크</strong> — N사 포털·플레이스 로직 대응 / <a href="https://www.hirank.kr" target="_blank" rel="noopener noreferrer">hirank.kr</a></li>
-          <li><strong>다이노픽</strong> — 블로그 자동화·분석 / <a href="https://www.dainopick.com" target="_blank" rel="noopener noreferrer">dainopick.com</a></li>
-        </ul>
+        <header class="prog-cat__head">
+          <p class="prog-cat__label">04</p>
+          <h2>모든 플랫폼, 맞춤 자동화</h2>
+          <p class="prog-cat__desc">위에 없는 채널·업무도 가능합니다. 웹·앱·관리자 화면 기준으로 수집·입력·알림·리포트를 맞춰 드립니다.</p>
+        </header>
+        <div class="prog-any">
+          <ul>
+            <li>포털 / 커뮤니티 / 커머스 / 예약·CRM 등 <strong>요청 플랫폼</strong></li>
+            <li>로그인·캡차·OTP 등 운영 제약에 맞춘 <strong>실무형 설계</strong></li>
+            <li>화면 원본은 보안상 비공개 → 사이트에는 <strong>핵심 기능 UI + 설명</strong>으로만 표기</li>
+          </ul>
+          <a href="index.html#contact" class="btn btn--orange">내 업무도 가능한지 문의</a>
+        </div>
       </div>
     </section>
 
     <section class="programs-cta">
       <div class="container">
-        <h2>필요한 시나리오만 말씀해 주세요</h2>
-        <p>패키지 강요 없이, 필요한 기능만 맞춰 구축합니다.</p>
+        <h2>목록에 없어도 말씀해 주세요</h2>
+        <p>패키지 강요 없이, 필요한 시나리오만 맞춰 구축합니다.</p>
         <a href="index.html#contact" class="btn btn--orange">문의하기</a>
       </div>
     </section>

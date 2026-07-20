@@ -32,15 +32,15 @@
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-/* Custom scrollbar */
+/* Custom scrollbar — thin, quiet, brand hover */
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, .28) transparent;
+  scrollbar-color: rgba(17, 17, 17, .28) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 *::-webkit-scrollbar-track {
@@ -48,20 +48,29 @@ html {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, .22);
+  background-color: rgba(17, 17, 17, .22);
   border-radius: 999px;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   background-clip: padding-box;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, .36);
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  background-color: rgba(249, 115, 22, .7);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: var(--orange);
 }
 
 *::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+/* Dark sections: lighter thumb */
+.section--ink,
+.hero,
+.header--dark {
+  scrollbar-color: rgba(255, 255, 255, .28) transparent;
 }
 
 body {
@@ -104,7 +113,13 @@ a { color: inherit; text-decoration: none; }
   padding: 0 28px;
 }
 
-.logo { font-weight: 800; font-size: 17px; letter-spacing: -.02em; }
+.logo {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -.02em;
+  color: #fff;
+  white-space: nowrap;
+}
 .logo > span:not(.brand-logo) { color: var(--orange); }
 .logo--img {
   display: inline-flex;
@@ -930,49 +945,75 @@ body.nav-open { overflow: hidden; }
 }
 
 .contact-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 480px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  max-width: 920px;
   margin: 0 auto;
+}
+
+.contact-card--primary {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 720px) {
+  .contact-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .contact-card--primary {
+    grid-column: auto;
+  }
 }
 
 .contact-card {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 100%;
+  padding: 20px 18px 18px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   text-decoration: none;
   color: inherit;
-  transition: border-color .15s, box-shadow .15s;
+  transition: border-color .18s, box-shadow .18s, transform .18s;
 }
 
-.contact-card:hover {
-  border-color: var(--orange);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+@media (hover: hover) and (pointer: fine) {
+  .contact-card:hover {
+    border-color: rgba(249, 115, 22, .45);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
+    transform: translateY(-2px);
+  }
 }
 
 .contact-card--primary {
-  border-color: rgba(249, 115, 22, .35);
+  border-color: rgba(249, 115, 22, .4);
+  background: linear-gradient(180deg, #fff7ed 0%, #fff 56%);
 }
 
 .contact-card__badge {
-  position: absolute; top: 8px; right: 10px;
-  font-size: 9px; font-weight: 700;
-  color: var(--orange);
-  background: var(--orange-light);
-  padding: 2px 6px;
-  border-radius: 4px;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #c2410c;
+  background: #ffedd5;
+  padding: 3px 8px;
+  border-radius: 999px;
 }
 
 .contact-card__icon {
-  width: 44px; height: 44px;
-  display: flex; align-items: center; justify-content: center;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 12px;
   color: var(--white);
   flex-shrink: 0;
@@ -980,41 +1021,51 @@ body.nav-open { overflow: hidden; }
 
 .contact-card--kakao .contact-card__icon { background: #3c1e1e; color: #fee500; }
 .contact-card--telegram .contact-card__icon { background: #229ed9; }
-.contact-card--email .contact-card__icon { background: #2a2d36; color: #fff; }
+.contact-card--email .contact-card__icon { background: #111; color: #fff; }
 
 .contact-card__body {
   min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .contact-card__label {
   display: block;
-  font-size: 12px; font-weight: 600; color: var(--muted);
-  margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .02em;
 }
 
 .contact-card__value {
   display: block;
-  font-size: 15px; font-weight: 700; letter-spacing: -.01em;
-  margin-bottom: 2px;
-  word-break: break-all;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.35;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   color: var(--white);
 }
 
-.contact-card--kakao .contact-card__value { color: #fee500; }
-.contact-card--telegram .contact-card__value { color: #7dd3fc; }
-.contact-card--email .contact-card__value { color: var(--white); font-size: 14px; }
+.contact-card--kakao .contact-card__value { color: #3c1e1e; }
+.contact-card--telegram .contact-card__value { color: #0369a1; }
+.contact-card--email .contact-card__value { color: #111; font-size: 14px; }
 
 .contact-card__hint {
   display: block;
-  font-size: 12px; color: var(--muted-2);
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-2);
+  line-height: 1.4;
 }
 
 .contact-card__action {
-  font-size: 16px; font-weight: 600; color: var(--muted-2);
-  flex-shrink: 0;
+  display: none;
 }
-
-.contact-card:hover .contact-card__action { color: var(--orange); }
 
 /* ===== Footer ===== */
 .footer {
@@ -1376,12 +1427,16 @@ body.nav-open { overflow: hidden; }
   border-color: #e5e7eb;
 }
 
+.section--light .contact-card--primary,
+.section--soft .contact-card--primary {
+  background: linear-gradient(180deg, #fff7ed 0%, #fff 58%);
+  border-color: #fdba74;
+}
+
 .section--light .contact-card__label,
 .section--soft .contact-card__label,
 .section--light .contact-card__hint,
-.section--soft .contact-card__hint,
-.section--light .contact-card__action,
-.section--soft .contact-card__action {
+.section--soft .contact-card__hint {
   color: #9ca3af;
 }
 
@@ -1399,7 +1454,7 @@ body.nav-open { overflow: hidden; }
 
 .section--light .contact-card--telegram .contact-card__value,
 .section--soft .contact-card--telegram .contact-card__value {
-  color: #0284c7;
+  color: #0369a1;
 }
 
 .section--light .contact-card--email .contact-card__icon {
