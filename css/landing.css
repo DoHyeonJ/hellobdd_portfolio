@@ -688,7 +688,7 @@
   .prog-toc__accordion { display: none; }
   .prog-toc__grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     border: 1px solid #dde1e6;
     border-radius: 10px;
